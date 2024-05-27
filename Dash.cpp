@@ -51,4 +51,4 @@ void Dash::move_character() {
     player->setPosition(xy_after_dash);
 }
 
-void Dash::draw(sf::RenderWindow &window) {}
+void Dash::draw(sf::RenderWindow &window) {} // animacja

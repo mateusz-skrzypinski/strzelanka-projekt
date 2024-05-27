@@ -1,5 +1,4 @@
 #include "include/Chronobreak.h"
-#include <iostream>
 
 Chronobreak::Chronobreak(sf::CircleShape &arg_player, float *arg_player_hp)
     : Skills(2, arg_player), player_hp(arg_player_hp) {
@@ -16,7 +15,6 @@ void Chronobreak::use_skill(sf::Vector2f arg_mouse_position) {
             is_teleport_set = false;
             activate_cooldown();
         } else {
-            std::cout << "teleport is set\n";
             teleport.setPosition(player->getPosition());
             set_xy();
             is_teleport_set = true;
@@ -35,7 +33,7 @@ void Chronobreak::teleport_character() {
     retrive_hp();
 }
 
-void Chronobreak::draw(sf::RenderWindow& window) {
+void Chronobreak::draw(sf::RenderWindow& window) { // animacja
     if (is_teleport_set) {
         window.draw(teleport);
     }

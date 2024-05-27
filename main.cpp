@@ -2,14 +2,27 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "include/Character.h"
+#include "include/Monster.h"
+#include "include/Zap.h"
+#include "include/Skills.h"
 #include <iostream>
+#include <vector>
+#include <ctime>
 
 sf::RenderWindow window(sf::VideoMode(1920, 1080), "My window");
 
 int main() {
+    srand(static_cast<unsigned int>(time(NULL)));
     window.setFramerateLimit(60);
     Character player;
-    player.setPosition(400, 300);
+    player.setPosition(sf::Vector2f(400, 300));
+    std::vector<Monster> monsters;
+    for (int i = 0; i < 5; i++) {
+        monsters.emplace_back(Monster());
+    }
+    player.skill_second_slot = new Zap(player.player_shape, &monsters);
+
+    sf::Clock clock;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -19,9 +32,8 @@ int main() {
             }
         }
 
+        float dt = clock.restart().asSeconds();
         float speed = 400.0f;
-        sf::Time deltaTime = sf::seconds(1.0f / 60.0f);
-        float dt = deltaTime.asSeconds();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && player.getPosition().y > 0) {
             player.move(sf::Vector2f(0, -speed * dt));
@@ -38,19 +50,26 @@ int main() {
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
             sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
-            player.skill_first_slot->use_skill(sf::Vector2f(mouse_position));
+            player.skill_first_slot->use_skill(static_cast<sf::Vector2f>(mouse_position));
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
             sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
-            player.skill_second_slot->use_skill(sf::Vector2f(mouse_position));
+            player.skill_second_slot->use_skill(static_cast<sf::Vector2f>(mouse_position));
         }
+
         player.skill_first_slot->change_cooldown(dt);
         player.skill_second_slot->change_cooldown(dt);
-        player.hp -= dt;
-        std::cout << player.hp << std::endl;
+
         window.clear();
+
+        for (auto& monster : monsters) {
+            monster.reduce_stun(dt);
+            monster.draw(window, dt);
+        }
+
         player.skill_second_slot->draw(window);
-        window.draw(player.player_shape);
+        player.draw(window);
+
         window.display();
     }
 

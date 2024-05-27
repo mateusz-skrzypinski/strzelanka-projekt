@@ -12,7 +12,7 @@
 sf::RenderWindow window(sf::VideoMode(1920, 1080), "My window");
 
 int main() {
-    srand(static_cast<unsigned int>(time(NULL)));
+    srand((time(NULL)));
     window.setFramerateLimit(60);
     Character player;
     player.setPosition(sf::Vector2f(400, 300));

@@ -13,7 +13,7 @@ public:
     void use_skill(sf::Vector2f arg_mouse_position) override;
     sf::Vector2f calc_xy(const sf::Vector2f& mouse_position);
     void move_character();
-    void draw(sf::RenderWindow &window);
+    void draw(sf::RenderWindow &window, float dt);
 };
 
 #endif // DASH_H

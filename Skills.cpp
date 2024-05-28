@@ -21,4 +21,4 @@ void Skills::activate_cooldown() {
     cooldown = initial_cooldown;
 }
 
-void Skills::draw(sf::RenderWindow &window) {}
+void Skills::draw(sf::RenderWindow &window, float dt) {}

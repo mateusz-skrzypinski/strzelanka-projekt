@@ -14,7 +14,7 @@ public:
     virtual ~Skills() = default;
 
     virtual void use_skill(sf::Vector2f arg_mouse_position) = 0;
-    virtual void draw(sf::RenderWindow &window) = 0;
+    virtual void draw(sf::RenderWindow &window, float dt) = 0;
     void activate_cooldown();
     bool is_cooldown_off();
     void change_cooldown(float new_cooldown);

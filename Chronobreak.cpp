@@ -33,7 +33,7 @@ void Chronobreak::teleport_character() {
     retrive_hp();
 }
 
-void Chronobreak::draw(sf::RenderWindow& window) { // animacja
+void Chronobreak::draw(sf::RenderWindow& window, float dt) { // animacja
     if (is_teleport_set) {
         window.draw(teleport);
     }

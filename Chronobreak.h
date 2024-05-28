@@ -16,7 +16,7 @@ public:
     void use_skill(sf::Vector2f arg_mouse_position) override;
     void teleport_character();
     void set_xy();
-    void draw(sf::RenderWindow& window) override;
+    void draw(sf::RenderWindow& window, float dt) override;
     void retrive_hp();
 };
 

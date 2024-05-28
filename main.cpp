@@ -5,6 +5,7 @@
 #include "include/Monster.h"
 #include "include/Zap.h"
 #include "include/Skills.h"
+#include "include/Fireball.h"
 #include <iostream>
 #include <vector>
 #include <ctime>
@@ -20,7 +21,7 @@ int main() {
     for (int i = 0; i < 5; i++) {
         monsters.emplace_back(Monster());
     }
-    player.skill_second_slot = new Zap(player.player_shape, &monsters);
+    player.skill_second_slot = new Fireball(player.player_shape, &monsters);
 
     sf::Clock clock;
 
@@ -61,13 +62,18 @@ int main() {
         player.skill_second_slot->change_cooldown(dt);
 
         window.clear();
-
-        for (auto& monster : monsters) {
-            monster.reduce_stun(dt);
-            monster.draw(window, dt);
+        // tylko do testowania      pozniej raczej metoda klasy
+        for (auto monster = monsters.begin(); monster != monsters.end(); ) {
+            monster->reduce_stun(dt);
+            monster->draw(window, dt);
+            if (monster->hp <= 0) {
+                monster = monsters.erase(monster); // erase zwraca następny ważny iterator
+            } else {
+                monster++; // inkrementacja iteratora tylko, gdy nie usuwamy elementu
+            }              // inaczej program zaczyna korzystać z z usuniętych elementów
         }
 
-        player.skill_second_slot->draw(window);
+        player.skill_second_slot->draw(window, dt);
         player.draw(window);
 
         window.display();

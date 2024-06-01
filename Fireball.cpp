@@ -12,7 +12,7 @@ Fireball::Fireball(sf::CircleShape &arg_player, std::vector<Monster> *arg_monste
     using_now = false;
     animated = -0.3;
     scale = 1.5;
-    texture.loadFromFile("img/Fireball.png");
+    texture.loadFromFile("../img/Fireball.png");
     sprite_fireball.setTexture(texture);
     sprite_fireball.setTextureRect(sf::IntRect(0,0,32,32));
     sprite_fireball.scale(sf::Vector2f(scale,scale));

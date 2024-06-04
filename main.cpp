@@ -12,7 +12,22 @@
 
 sf::RenderWindow window(sf::VideoMode(1920, 1080), "My window");
 
-bool poziom() //zwraca true jak gracz przejdzie false jak umrze
+void start();   //menu startu
+
+bool poziom(); //zwraca true jak gracz przejdzie false jak umrze
+
+int main() {
+    srand((time(NULL)));
+    window.setFramerateLimit(60);
+
+    start();
+
+    poziom();
+
+    return 0;
+}
+
+bool poziom()
 {
     Character player;
     player.setPosition(sf::Vector2f(400, 300));
@@ -81,11 +96,43 @@ bool poziom() //zwraca true jak gracz przejdzie false jak umrze
     return true;
 }
 
-int main() {
-    srand((time(NULL)));
-    window.setFramerateLimit(60);
+void start()
+{
+    sf::Font menu_czcionka;
+    menu_czcionka.loadFromFile("../../font/Honk-Regular.ttf");
 
-    poziom();
+    window.clear(sf::Color::Black);
+    while(window.isOpen()){
+        window.clear(sf::Color::Black);
+        sf::Texture t_logo;
+        t_logo.loadFromFile("../../img/logo.png");
+        sf::Sprite logo(t_logo);
+        logo.setOrigin(t_logo.getSize().x/2,0);
+        logo.setPosition(sf::Vector2f(window.getSize().x/2,150));
 
-    return 0;
+        sf::Text start("START",menu_czcionka,5);
+        start.setCharacterSize(40);
+        start.setFillColor(sf::Color::Green);
+        start.setPosition(window.getSize().x/2-150,400);
+
+        sf::Text trud("POZIOM TRUDNOSCI",menu_czcionka,5);
+        trud.setCharacterSize(40);
+        trud.setFillColor(sf::Color::Green);
+        trud.setPosition(window.getSize().x/2-300,600);
+
+        window.draw(logo);
+        window.draw(start);
+        window.draw(trud);
+
+        sf::Event event;
+        while(window.pollEvent(event)){
+            if(event.type == sf::Event::Closed){
+                // Close window button clicked.
+                window.close();
+            }
+        }
+
+        // Draw here.
+        window.display();
+    }
 }

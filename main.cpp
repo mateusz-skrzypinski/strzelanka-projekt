@@ -12,9 +12,8 @@
 
 sf::RenderWindow window(sf::VideoMode(1920, 1080), "My window");
 
-int main() {
-    srand((time(NULL)));
-    window.setFramerateLimit(60);
+bool poziom() //zwraca true jak gracz przejdzie false jak umrze
+{
     Character player;
     player.setPosition(sf::Vector2f(400, 300));
     std::vector<Monster> monsters;
@@ -78,6 +77,15 @@ int main() {
 
         window.display();
     }
+
+    return true;
+}
+
+int main() {
+    srand((time(NULL)));
+    window.setFramerateLimit(60);
+
+    poziom();
 
     return 0;
 }

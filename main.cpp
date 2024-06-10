@@ -4,13 +4,13 @@
 #include "include/Character.h"
 #include "include/Monster.h"
 #include "include/Zap.h"
+#include "include/start_menu.h"
 #include "include/Skills.h"
 #include "include/Fireball.h"
-#include "include/start.h"
 #include <vector>
 #include <ctime>
 
-sf::RenderWindow window(sf::VideoMode(1920, 1080), "My window");
+sf::RenderWindow window(sf::VideoMode(1920,1080), "My window", sf::Style::Close);
 
 bool poziom(); //zwraca true jak gracz przejdzie false jak umrze
 
@@ -18,7 +18,7 @@ int main() {
     srand((time(NULL)));
     window.setFramerateLimit(60);
 
-    Start st;
+    StartMenu st(window);
     st.run(window);
 
     poziom();

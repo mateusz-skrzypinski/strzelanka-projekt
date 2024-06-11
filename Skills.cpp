@@ -1,7 +1,7 @@
 #include "include/Skills.h"
 #include <SFML/Graphics.hpp>
 
-Skills::Skills(float arg_cooldown, sf::CircleShape& arg_player)
+Skills::Skills(float arg_cooldown, sf::Sprite& arg_player)
     : cooldown(0), initial_cooldown(arg_cooldown), player(&arg_player) {
 }
 

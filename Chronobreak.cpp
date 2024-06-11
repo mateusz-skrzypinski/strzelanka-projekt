@@ -1,7 +1,7 @@
 #include "include/Chronobreak.h"
 
-Chronobreak::Chronobreak(sf::CircleShape &arg_player, float *arg_player_hp)
-    : Skills(2, arg_player), player_hp(arg_player_hp) {
+Chronobreak::Chronobreak(sf::Sprite &arg_player, float *arg_player_hp)
+    : Skills(2.0f, arg_player), player_hp(arg_player_hp) {
     teleport.setRadius(15.0f);
     teleport.setFillColor(sf::Color::Blue);
     is_teleport_set = false;

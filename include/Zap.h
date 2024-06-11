@@ -25,7 +25,7 @@ public:
     int frame_number;
     bool casted;
 
-    Zap(sf::CircleShape& arg_player, std::vector<Monster> *arg_monsters);
+    Zap(sf::Sprite& arg_player, std::vector<Monster> *arg_monsters);
     void use_skill(sf::Vector2f arg_mouse_position) override;
     void draw(sf::RenderWindow& window, float dt) override;
     void react_with_monsters();

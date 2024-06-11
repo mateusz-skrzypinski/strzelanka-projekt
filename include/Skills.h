@@ -7,10 +7,10 @@ class Skills {
 public:
     float cooldown;
     float initial_cooldown;
-    sf::CircleShape* player;
+    sf::Sprite* player;
     sf::Vector2f mouse_position;
 
-    Skills(float arg_cooldown, sf::CircleShape& arg_player);
+    Skills(float arg_cooldown, sf::Sprite &arg_player);
     virtual ~Skills() = default;
 
     virtual void use_skill(sf::Vector2f arg_mouse_position) = 0;

@@ -12,7 +12,7 @@ public:
     int hp_before_teleport;
     float *player_hp;
 
-    Chronobreak(sf::CircleShape& arg_player, float *arg_player_hp);
+    Chronobreak(sf::Sprite& arg_player, float *arg_player_hp);
     void use_skill(sf::Vector2f arg_mouse_position) override;
     void teleport_character();
     void set_xy();

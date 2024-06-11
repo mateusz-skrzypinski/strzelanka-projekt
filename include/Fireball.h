@@ -22,7 +22,7 @@ public:
     float animated;
     float scale;
 
-    Fireball(sf::CircleShape& arg_player, std::vector<Monster> *arg_monsters);
+    Fireball(sf::Sprite& arg_player, std::vector<Monster> *arg_monsters);
     void use_skill(sf::Vector2f arg_mouse_position) override;
     void draw(sf::RenderWindow& window, float dt) override;
     void react_with_monsters();

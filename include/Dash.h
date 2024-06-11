@@ -9,7 +9,7 @@ public:
     sf::Vector2f xy_after_dash;
     float maximum_dash_range;
 
-    Dash(float arg_maximum_dash_range, sf::CircleShape& arg_player);
+    Dash(float arg_maximum_dash_range, sf::Sprite& arg_player);
     void use_skill(sf::Vector2f arg_mouse_position) override;
     sf::Vector2f calc_xy(const sf::Vector2f& mouse_position);
     void move_character();

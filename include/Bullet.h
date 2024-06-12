@@ -10,7 +10,6 @@ public:
     float bullet_velocity;
     sf::Vector2f bullet_direction;
     sf::Vector2f start_position;
-    float bullet_damage;
 
     static sf::Texture bullet_texture;
 

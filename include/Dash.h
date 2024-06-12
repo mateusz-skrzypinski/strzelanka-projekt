@@ -8,6 +8,16 @@ class Dash : public Skills {
 public:
     sf::Vector2f xy_after_dash;
     float maximum_dash_range;
+    sf::Vector2f direction_vector;
+    float norm;
+
+    sf::Texture animation_texture;
+    sf::Sprite animation_sprite;
+    float animation_angle;
+    int frame_number;
+    float frame_distance;
+    float alpha;
+
 
     Dash(float arg_maximum_dash_range, sf::Sprite& arg_player);
     void use_skill(sf::Vector2f arg_mouse_position) override;

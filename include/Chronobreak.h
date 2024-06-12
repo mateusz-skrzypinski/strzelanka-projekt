@@ -7,10 +7,16 @@
 class Chronobreak : public Skills {
 public:
     sf::Vector2f xy_to_teleport;
-    sf::CircleShape teleport;
     bool is_teleport_set;
     int hp_before_teleport;
     float *player_hp;
+
+    sf::Texture teleport_texture;;
+    sf::Sprite animation_sprite;
+    sf::Sprite teleport_sprite;
+    int frame_number;
+    bool second_animation;
+    float alpha;
 
     Chronobreak(sf::Sprite& arg_player, float *arg_player_hp);
     void use_skill(sf::Vector2f arg_mouse_position) override;

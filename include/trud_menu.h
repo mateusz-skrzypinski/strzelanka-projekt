@@ -6,7 +6,6 @@
 class DifficultyMenu : public Menu {
 private:
     sf::Text easy, medium, hard;
-
     void initialize(sf::RenderWindow& window);
 
 

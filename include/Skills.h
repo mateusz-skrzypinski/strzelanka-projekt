@@ -9,6 +9,7 @@ public:
     float initial_cooldown;
     sf::Sprite* player;
     sf::Vector2f mouse_position;
+    float animation_time;
 
     Skills(float arg_cooldown, sf::Sprite &arg_player);
     virtual ~Skills() = default;

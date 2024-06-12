@@ -11,6 +11,7 @@ public:
     Skills* skill_second_slot;
     float hp;
     float speed;
+    std::string name_of_skill;
 
     sf::Sprite player_sprite;
     sf::RectangleShape hit_box;

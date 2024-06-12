@@ -11,6 +11,9 @@ public:
     Skills* skill_second_slot;
     int hp;
     float speed;
+    float initial_speed;
+    float slow_factor;
+    float slow_timer;
     std::string name_of_skill;
 
     sf::Sprite player_sprite;

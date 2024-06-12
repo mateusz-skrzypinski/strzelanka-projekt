@@ -7,12 +7,15 @@
 #include "include/start_menu.h"
 #include "include/Skills.h"
 #include "include/Fireball.h"
+#include "include/Dash.h"
+#include "include/Chronobreak.h"
 #include <vector>
 #include <iostream>
 #include <ctime>
 #include <cmath>
 #include <stdexcept>
 #include "include/Bullet.h"
+#include "include/Guns.h"
 
 sf::RenderWindow window(sf::VideoMode(1920, 1080), "my window", sf::Style::Close);
 
@@ -40,14 +43,18 @@ bool poziom() {
     try {
         // deklaracje
         Character player;
+        Guns gun;
         player.setPosition(sf::Vector2f(400, 300));
+
+        player.skill_first_slot = new Dash(1000, player.player_sprite);
+        player.name_of_skill = "Teleport";
+
         std::vector<Monster> monsters;
         for (int i = 0; i < 5; i++) {
             monsters.emplace_back(Monster());
         }
         std::vector<Bullet> bullets;
         sf::Clock clock;
-        float timer = 0.0f; // dla strzelania
 
         while (window.isOpen()) {
             sf::Event event;
@@ -61,30 +68,33 @@ bool poziom() {
             sf::Time elapsed = clock.restart();
             float dt = elapsed.asSeconds();
             sf::Vector2f mouse_xy(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
-            timer += dt;
+            gun.increse_timer(dt);
 
             // poruszanie sie
             player.top = 0;  // Resetujemy wartości na 0 przed sprawdzeniem
             player.right = 0;
             player.is_walking = false;
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && player.getPosition().y > 0) {
-                player.top = -1;
-                player.is_walking = true;
+            if ((player.name_of_skill == "Dash" && player.skill_first_slot->animation_time <= 0)
+                || (player.name_of_skill == "Teleport" && player.skill_first_slot->animation_time <= 0)) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && player.getPosition().y > 0) {
+                    player.top = -1;
+                    player.is_walking = true;
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && player.getPosition().y + player.player_sprite.getGlobalBounds().height < window.getSize().y) {
+                    player.top = 1;
+                    player.is_walking = true;
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && player.getPosition().x > 0) {
+                    player.right = -1;
+                    player.is_walking = true;
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && player.getPosition().x + player.player_sprite.getGlobalBounds().width < window.getSize().x) {
+                    player.right = 1;
+                    player.is_walking = true;
+                }
+                player.move(sf::Vector2f(player.right * player.speed * dt, player.top * player.speed * dt));
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && player.getPosition().y + player.player_sprite.getGlobalBounds().height < window.getSize().y) {
-                player.top = 1;
-                player.is_walking = true;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && player.getPosition().x > 0) {
-                player.right = -1;
-                player.is_walking = true;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && player.getPosition().x + player.player_sprite.getGlobalBounds().width < window.getSize().x) {
-                player.right = 1;
-                player.is_walking = true;
-            }
-            player.move(sf::Vector2f(player.right * player.speed * dt, player.top * player.speed * dt));
 
             // spelle
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && player.skill_first_slot != nullptr)
@@ -97,26 +107,27 @@ bool poziom() {
                 player.skill_second_slot->change_cooldown(dt);
 
             // strzelanie
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                if (timer > 0.1) {
-                    sf::Vector2f aim_direction = mouse_xy - player.getPosition();
-                    float norm = sqrt(pow(aim_direction.x, 2) + pow(aim_direction.y, 2));
-                    aim_direction = aim_direction / norm;
-                    Bullet bullet(aim_direction, player.getPosition());
-                    bullet.shoot_bullet();
-                    bullets.emplace_back(bullet);
-                    timer = 0;
+            if (player.name_of_skill == "Teleport" && player.skill_first_slot->animation_time <= 0) {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                    if (gun.last_bullet_timer > gun.fire_rate) {
+                        sf::Vector2f aim_direction = mouse_xy - player.getPosition();
+                        float norm = sqrt(pow(aim_direction.x, 2) + pow(aim_direction.y, 2));
+                        aim_direction = aim_direction / norm;
+                        Bullet bullet(aim_direction, player.getPosition());
+                        bullet.shoot_bullet();
+                        bullets.emplace_back(bullet);
+                        gun.last_bullet_timer = 0;
+                    }
+                    player.is_shooting = true;
                 }
-                player.is_shooting = true;
             }
-
             for (size_t i = 0; i < bullets.size(); i++) {
                 bullets[i].move_(dt);
                 if (!bullets[i].is_bullet_in())
                     bullets.erase(bullets.begin() + i);
                 for (auto &monster : monsters) {
                     if (bullets[i].check_collision(monster) && monster.hp > 0) {
-                        monster.hp -= bullets[i].bullet_damage;
+                        monster.hp -= gun.damage;
                         bullets.erase(bullets.begin() + i);
                         break;  // Wychodzimy z pętli, aby uniknąć problemów z iteratorami
                     }
@@ -137,6 +148,11 @@ bool poziom() {
                     ++it;
                 }
             }
+
+            if (player.skill_first_slot != nullptr)
+                player.skill_first_slot->draw(window, dt);
+            if (player.skill_second_slot != nullptr)
+                player.skill_second_slot->draw(window, dt);
 
             player.draw(window, dt, mouse_xy);
 

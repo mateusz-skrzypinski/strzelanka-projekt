@@ -1,13 +1,14 @@
 #include "include/Chronobreak.h"
 #include <iostream>
 
-Chronobreak::Chronobreak(sf::Sprite &arg_player, float *arg_player_hp)
-    : Skills(2.0f, arg_player), player_hp(arg_player_hp) {
+Chronobreak::Chronobreak(sf::Sprite &arg_player, sf::RectangleShape &arg_hit_box, float *arg_player_hp)
+    : Skills(2.0f, arg_player, arg_hit_box), player_hp(arg_player_hp) {
     teleport_texture.loadFromFile("../../img/Teleport.png");
     teleport_sprite.setTexture(teleport_texture);
     teleport_sprite.setOrigin(teleport_sprite.getGlobalBounds().width/2, teleport_sprite.getGlobalBounds().height/2);
     is_teleport_set = false;
     second_animation = true;
+    animation_time = 0;
 }
 
 void Chronobreak::use_skill(sf::Vector2f arg_mouse_position) {
@@ -37,6 +38,7 @@ void Chronobreak::set_xy() {
 
 void Chronobreak::teleport_character() {
     player->setPosition(xy_to_teleport);
+    hit_box->setPosition(xy_to_teleport);
     retrive_hp();
 }
 
@@ -64,7 +66,7 @@ void Chronobreak::draw(sf::RenderWindow& window, float dt) { // animacja
             // druga czesc, gdzie pojawia sie na miejscu teleporta
             if (second_animation) {
                 second_animation = false;
-                player->setPosition(xy_to_teleport);
+                teleport_character();
             }
             else {
                 if (frame_number == 0)

@@ -9,6 +9,9 @@ sf::Texture Monster::monster_texture;
 
 Monster::Monster() {
     dying_time = 2;
+    damage = 1;
+    attack_speed = 0.1;
+    last_attack = 0;
     frame_number = 0;
     scale_factor = 3.0f;
     if (!monster_texture.loadFromFile("../../img/acolyte_monster.png")) {
@@ -42,6 +45,7 @@ void Monster::reduce_stun(float dt) {
 }
 
 void Monster::draw(sf::RenderWindow &window, float dt, sf::Vector2f character_xy) {
+    last_attack += dt;
     if (stun <= 0 && hp > 0) {
         sf::Vector2f monster_xy = this->getPosition();
         sf::Vector2f dir_vector = character_xy - monster_xy;
@@ -109,4 +113,15 @@ void Monster::dying_animate(sf::RenderWindow &window, float dt) {
     float alpha = 255 * (2 / dying_time);
     this->setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha)));
     window.draw(*this);
+}
+
+bool Monster::check_collision(sf::FloatRect object_rect) {
+    //std::cout << (last_attack > attack_speed) << std::endl;
+    //std::cout << "" << object_rect.height << " " << object_rect.left << " " <<object_rect.top << " " << object_rect.width << std::endl;
+    if (last_attack > attack_speed) {
+        last_attack = 0;
+        //std::cout << "delt damage to player" << std::endl;
+        return this->getGlobalBounds().intersects(object_rect);
+    }
+    return false;
 }

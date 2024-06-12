@@ -46,7 +46,7 @@ bool poziom() {
         Guns gun;
         player.setPosition(sf::Vector2f(400, 300));
 
-        player.skill_first_slot = new Dash(1000, player.player_sprite);
+        player.skill_first_slot = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
         player.name_of_skill = "Teleport";
 
         std::vector<Monster> monsters;
@@ -134,6 +134,10 @@ bool poziom() {
                 }
             }
 
+            // obsluga jesli gracz ma mniej niz 0 hp - pozniej zwraca wartosc false funkcji poziom()
+            if (player.hp <= 0)
+                std::cout << "gracz ma mniej niz 0 hp\n";
+
             // renderowanie
             window.clear();
 
@@ -141,6 +145,10 @@ bool poziom() {
                 window.draw(bullet);
 
             for (auto it = monsters.begin(); it != monsters.end();) {
+                //std::cout << player.player_sprite.getPosition().x << "    " << player.player_sprite.getPosition().y << std::endl;
+                if (it->hp > 0 && it->check_collision(player.hit_box.getGlobalBounds())) {
+                    player.hp -= it->damage;
+                }
                 it->draw(window, dt, player.getPosition());
                 if (it->dying_time <= 0.0f) {
                     it = monsters.erase(it);

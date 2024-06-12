@@ -13,6 +13,11 @@ Character::Character() {
     skill_second_slot = nullptr;
     load_texture();
     player_sprite.setOrigin(102,90);
+    hit_box.setPosition(player_sprite.getPosition());
+    hit_box.setSize(sf::Vector2f(190, 180));
+    hit_box.setOrigin(95, 90);
+    hit_box.setPosition(300,400);
+    hp = 100;
     top = 0;
     right = 0;
     speed = 400.0f/DifficultyMenu::mnoznik_trud; //gracz jest wolniejszy jesli ma wyzszy poziom trudnosci

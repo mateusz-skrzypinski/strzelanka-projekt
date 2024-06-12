@@ -1,33 +1,40 @@
 #include "include/Bullet.h"
 #include <iostream>
+#include <cmath>
 
-Bullet::Bullet(sf::Vector2f arg_bullet_direction, Character player) {
+sf::Texture Bullet::bullet_texture;
+
+Bullet::Bullet(sf::Vector2f arg_bullet_direction, sf::Vector2f character_xy) {
     bullet_damage = 1;
     if (!bullet_texture.loadFromFile("../../img/bullet.png")) {
         std::cerr << "Nie udało się załadować tekstury pocisku!" << std::endl;
     }
     bullet_direction = arg_bullet_direction;
-    start_position = sf::Vector2f(player.getPosition().x, player.getPosition().y);
-    bullet_velocity = 500.0f;
-    std::cout << "Bullet created at position: " << start_position.x << ", " << start_position.y << std::endl;
+    start_position = character_xy;
+    this->setOrigin(this->getGlobalBounds().width/2, this->getGlobalBounds().height/2);
+    float alpha;
+    if (bullet_direction.x > 0) {
+        alpha = atan(bullet_direction.y / bullet_direction.x) * 180/M_PI;
+
+    } else {
+        alpha = (M_PI + atan(bullet_direction.y / bullet_direction.x)) * 180/M_PI;
+    }
+    this->setRotation(alpha);
+    bullet_velocity = 1500.0f;
 }
 
 void Bullet::shoot_bullet() {
     this->setPosition(start_position);
     this->setTexture(bullet_texture);
-    std::cout << "Bullet shot from position: " << start_position.x << ", " << start_position.y << std::endl;
 }
 
 void Bullet::move_(float dt) {
-    std::cout << "before bullet move" << std::endl;
     this->move(bullet_direction * bullet_velocity * dt);
-    std::cout << "Bullet moved to position: " << this->getPosition().x << ", " << this->getPosition().y << std::endl;
 }
 
 bool Bullet::is_bullet_in() {
     if (this->getPosition().x < 0 || this->getPosition().x > 1920 ||
         this->getPosition().y < 0 || this->getPosition().y > 1080) {
-        std::cout << "Bullet out of bounds!" << std::endl;
         return false;
     }
     return true;
@@ -36,10 +43,6 @@ bool Bullet::is_bullet_in() {
 bool Bullet::check_collision(Monster &monster) {
     sf::FloatRect bulletBounds = this->getGlobalBounds();
     sf::FloatRect monsterBounds = monster.getGlobalBounds();
-
-    std::cout << "Bullet bounds: " << bulletBounds.left << ", " << bulletBounds.top << ", " << bulletBounds.width << ", " << bulletBounds.height << std::endl;
-    std::cout << "Monster bounds: " << monsterBounds.left << ", " << monsterBounds.top << ", " << monsterBounds.width << ", " << monsterBounds.height << std::endl;
-
     return bulletBounds.intersects(monsterBounds);
 }
 

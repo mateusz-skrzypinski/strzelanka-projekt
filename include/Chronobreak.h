@@ -18,7 +18,7 @@ public:
     bool second_animation;
     float alpha;
 
-    Chronobreak(sf::Sprite& arg_player, float *arg_player_hp);
+    Chronobreak(sf::Sprite& arg_player, sf::RectangleShape &arg_hit_box, float *arg_player_hp);
     void use_skill(sf::Vector2f arg_mouse_position) override;
     void teleport_character();
     void set_xy();

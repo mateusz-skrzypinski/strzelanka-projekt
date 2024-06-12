@@ -9,6 +9,9 @@ public:
     float hp;
     float speed;
     float stun;
+    float damage;
+    float attack_speed;
+    float last_attack;
 
     // animacja
     std::vector<sf::IntRect> frame_dimentions;
@@ -22,6 +25,7 @@ public:
     void reduce_stun(float dt);
     void draw(sf::RenderWindow &window, float dt, sf::Vector2f character_xy);
     void dying_animate(sf::RenderWindow &window, float dt);
+    bool check_collision(sf::FloatRect object_rect);
 };
 
 #endif // MONSTER_H

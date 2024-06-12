@@ -8,9 +8,11 @@ public:
     float cooldown;
     float initial_cooldown;
     sf::Sprite* player;
+    sf::RectangleShape *hit_box;
     sf::Vector2f mouse_position;
     float animation_time;
 
+    Skills(float arg_cooldown, sf::Sprite &arg_player, sf::RectangleShape &arg_hit_box);
     Skills(float arg_cooldown, sf::Sprite &arg_player);
     virtual ~Skills() = default;
 

@@ -20,29 +20,33 @@ Bullet::Bullet(sf::Vector2f arg_bullet_direction, sf::Vector2f character_xy) {
     }
     this->setRotation(alpha);
     bullet_velocity = 1500.0f;
+    hit_box.setSize(sf::Vector2f(6,4));
+    hit_box.setOrigin(3,2);
+    hit_box.setRotation(alpha);
 }
 
 void Bullet::shoot_bullet() {
     this->setPosition(start_position);
+    hit_box.setPosition(start_position);
     this->setTexture(bullet_texture);
 }
 
 void Bullet::move_(float dt) {
     this->move(bullet_direction * bullet_velocity * dt);
+    hit_box.move(bullet_direction * bullet_velocity * dt);
 }
 
 bool Bullet::is_bullet_in() {
-    if (this->getPosition().x < 0 || this->getPosition().x > 1920 ||
-        this->getPosition().y < 0 || this->getPosition().y > 1080) {
+    if (hit_box.getPosition().x < 0 || hit_box.getPosition().x > 1920 ||
+        hit_box.getPosition().y < 0 || hit_box.getPosition().y > 1080) {
         return false;
     }
     return true;
 }
 
-bool Bullet::check_collision(Monster &monster) {
-    sf::FloatRect bulletBounds = this->getGlobalBounds();
-    sf::FloatRect monsterBounds = monster.getGlobalBounds();
-    return bulletBounds.intersects(monsterBounds);
+bool Bullet::check_collision(sf::FloatRect object_bounds) {
+    sf::FloatRect bulletBounds = hit_box.getGlobalBounds();
+    return bulletBounds.intersects(object_bounds);
 }
 
 void Bullet::drawBounds(sf::RenderTarget& target, sf::RenderStates states) const {

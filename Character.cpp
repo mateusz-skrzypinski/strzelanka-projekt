@@ -2,8 +2,8 @@
 #include "include/Dash.h"
 #include <SFML/Graphics.hpp>
 #include "include/Zap.h"
-#include "include/trud_menu.h"
 #include <iostream>
+#include "include/trud_menu.h"
 #include <cmath>
 
 Character::Character() {
@@ -59,7 +59,7 @@ void Character::setPosition(sf::Vector2f position) {
 
 void Character::draw(sf::RenderWindow& window, float dt, sf::Vector2f mouse_xy) {
     if (!is_walking && !is_shooting) {
-        speed = 400;
+        speed = 400.0f/DifficultyMenu::mnoznik_trud; //gracz jest wolniejszy jesli ma wyzszy poziom trudnosci
         player_sprite.setTexture(peace_texture);
         window.draw(player_sprite);
         return;
@@ -75,7 +75,7 @@ void Character::draw(sf::RenderWindow& window, float dt, sf::Vector2f mouse_xy) 
     }
 
     if (is_shooting) {
-        speed = 200;
+        speed = 200.0f/DifficultyMenu::mnoznik_trud; //gracz jest wolniejszy jesli ma wyzszy poziom trudnosci
         if (frame_number < static_cast<int>(shooting_texture.size())) {
             player_sprite.setTexture(shooting_texture[frame_number]);
         } else {
@@ -97,7 +97,7 @@ void Character::draw(sf::RenderWindow& window, float dt, sf::Vector2f mouse_xy) 
         }
         player_sprite.setRotation(alpha);
     } else {
-        speed = 400;
+        speed = 400.0f/DifficultyMenu::mnoznik_trud; //gracz jest wolniejszy jesli ma wyzszy poziom trudnosci
         if (frame_number < static_cast<int>(walking_texture.size())) {
             player_sprite.setTexture(walking_texture[frame_number]);
         } else {

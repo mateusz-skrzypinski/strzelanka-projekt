@@ -1,4 +1,5 @@
 #include "include/start_menu.h"
+#include "include/trud_menu.h"
 
 StartMenu::StartMenu(sf::RenderWindow& window) {
     initialize(window);
@@ -109,7 +110,8 @@ void StartMenu::handleEvents(sf::RenderWindow& window) {
                 }
 
                 if (trud.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                    // Wyświetlenie menu poziomu trudności
+                    DifficultyMenu trud_menu_window(window);
+                    trud_menu_window.run(window);
                 }
 
                 if (pomoc.getGlobalBounds().contains(mousePos.x, mousePos.y)) {

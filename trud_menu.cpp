@@ -1,5 +1,7 @@
 #include "include/trud_menu.h"
 
+double DifficultyMenu::mnoznik_trud = 1.0f;
+
 DifficultyMenu::DifficultyMenu(sf::RenderWindow& window) {
     initialize(window);
 }

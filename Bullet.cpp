@@ -5,7 +5,6 @@
 sf::Texture Bullet::bullet_texture;
 
 Bullet::Bullet(sf::Vector2f arg_bullet_direction, sf::Vector2f character_xy) {
-    bullet_damage = 1;
     if (!bullet_texture.loadFromFile("../../img/bullet.png")) {
         std::cerr << "Nie udało się załadować tekstury pocisku!" << std::endl;
     }

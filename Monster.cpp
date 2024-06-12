@@ -4,6 +4,7 @@
 #include <cmath>
 #include "include/trud_menu.h"
 
+
 sf::Texture Monster::monster_texture;
 
 Monster::Monster() {

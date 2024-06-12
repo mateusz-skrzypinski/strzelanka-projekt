@@ -9,7 +9,7 @@ class Character {
 public:
     Skills* skill_first_slot;
     Skills* skill_second_slot;
-    float hp;
+    int hp;
     float speed;
     std::string name_of_skill;
 

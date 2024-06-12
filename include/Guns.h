@@ -5,9 +5,10 @@ class Guns {
 public:
     float fire_rate;
     float last_bullet_timer;
-    float damage;
+    int damage;
 
     Guns();
     void increse_timer(float dt);
+
 };
 #endif // GUNS_H

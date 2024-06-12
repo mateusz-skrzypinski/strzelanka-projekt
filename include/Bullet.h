@@ -12,9 +12,9 @@ public:
     sf::Vector2f start_position;
     float bullet_damage;
 
-    sf::Texture bullet_texture;
+    static sf::Texture bullet_texture;
 
-    Bullet(sf::Vector2f arg_bullet_direction, Character player);
+    Bullet(sf::Vector2f arg_bullet_direction, sf::Vector2f character_xy);
     void shoot_bullet();
     void move_(float dt);
     bool is_bullet_in();

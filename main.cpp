@@ -9,6 +9,7 @@
 #include "include/Fireball.h"
 #include "include/Dash.h"
 #include "include/Chronobreak.h"
+#include "include/shop_menu.h"
 #include <vector>
 #include <iostream>
 #include <ctime>
@@ -22,7 +23,7 @@ sf::RenderWindow window(sf::VideoMode(1920, 1080), "my window", sf::Style::Close
 bool poziom();
 
 int main() {
-    try {
+    try {        
         srand((time(NULL)));
         window.setFramerateLimit(60);
 
@@ -44,6 +45,10 @@ bool poziom() {
         // deklaracje
         Character player;
         Guns gun;
+
+        ShopMenu sklep(window,gun,player);
+        sklep.run(window);
+
         player.setPosition(sf::Vector2f(400, 300));
 
         player.skill_first_slot = new Dash(1000, player.player_sprite, player.hit_box);

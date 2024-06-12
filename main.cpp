@@ -46,8 +46,10 @@ bool poziom() {
         Guns gun;
         player.setPosition(sf::Vector2f(400, 300));
 
-        player.skill_first_slot = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
-        player.name_of_skill = "Teleport";
+        player.skill_first_slot = new Dash(1000, player.player_sprite, player.hit_box);
+        player.name_of_skill = "Dash"; // bardzo ważne - pamietaj przy tworzeniu sklepu
+        // player.skill_first_slot = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
+        // player.name_of_skill = "Teleport"; // bardzo ważne - plamietaj przy tworzeniu sklepu
 
         std::vector<Monster> monsters;
         for (int i = 0; i < 5; i++) {
@@ -107,7 +109,7 @@ bool poziom() {
                 player.skill_second_slot->change_cooldown(dt);
 
             // strzelanie
-            if (player.name_of_skill == "Teleport" && player.skill_first_slot->animation_time <= 0) {
+            if ((player.name_of_skill == "Teleport" && player.skill_first_slot->animation_time <= 0) || player.name_of_skill != "Teleport") {
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                     if (gun.last_bullet_timer > gun.fire_rate) {
                         sf::Vector2f aim_direction = mouse_xy - player.getPosition();
@@ -145,7 +147,6 @@ bool poziom() {
                 window.draw(bullet);
 
             for (auto it = monsters.begin(); it != monsters.end();) {
-                //std::cout << player.player_sprite.getPosition().x << "    " << player.player_sprite.getPosition().y << std::endl;
                 if (it->hp > 0 && it->check_collision(player.hit_box.getGlobalBounds())) {
                     player.hp -= it->damage;
                 }

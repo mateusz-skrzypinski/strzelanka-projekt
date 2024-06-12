@@ -4,8 +4,8 @@
 #include <SFML/System.hpp>
 #include <cmath>
 
-Dash::Dash(float arg_maximum_dash_range, sf::Sprite& arg_player)
-    : Skills(2.0f, arg_player), maximum_dash_range(arg_maximum_dash_range) {
+Dash::Dash(float arg_maximum_dash_range, sf::Sprite& arg_player, sf::RectangleShape &arg_hit_box)
+    : Skills(2.0f, arg_player, arg_hit_box), maximum_dash_range(arg_maximum_dash_range) {
 }
 
 void Dash::use_skill(sf::Vector2f arg_mouse_position) {
@@ -64,6 +64,7 @@ sf::Vector2f Dash::calc_xy(const sf::Vector2f& mouse_position) {
 
 void Dash::move_character() {
     player->setPosition(xy_after_dash);
+    hit_box->setPosition(xy_after_dash);
 }
 
 void Dash::draw(sf::RenderWindow &window, float dt) {

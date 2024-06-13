@@ -1,7 +1,7 @@
 #include "include/Chronobreak.h"
 #include <iostream>
 
-Chronobreak::Chronobreak(sf::Sprite &arg_player, sf::RectangleShape &arg_hit_box, float *arg_player_hp)
+Chronobreak::Chronobreak(sf::Sprite &arg_player, sf::RectangleShape &arg_hit_box, int *arg_player_hp)
     : Skills(2.0f, arg_player, arg_hit_box, "TELEPORT"), player_hp(arg_player_hp) {
     teleport_texture.loadFromFile("../../img/Teleport.png");
     teleport_sprite.setTexture(teleport_texture);

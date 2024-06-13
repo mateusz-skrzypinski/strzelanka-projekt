@@ -12,14 +12,10 @@ public:
     float damage;
     float attack_speed;
     float last_attack;
-    float slow_timer;
-    float slow_factor;
-    float initial_speed;
 
     // animacja
     std::vector<sf::IntRect> frame_dimentions;
     static sf::Texture monster_texture;
-    sf::RectangleShape hit_box;
     int frame_number;
     float scale_factor;
     float last_frame;

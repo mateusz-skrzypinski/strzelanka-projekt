@@ -5,6 +5,7 @@
 #include "include/Guns.h"
 #include "include/Character.h"
 
+
 class ShopMenu : public Menu {
 private:
     sf::Text weaponUpgrade, healthUpgrade;
@@ -14,15 +15,17 @@ private:
     int playerCoins = 100000; // Początkowa liczba monet gracza
     int& playerHealth;
     int& playerDamage;
-    std::string skill1 = "Umiejetnosc X";
-    std::string skill2 = "Umiejetnosc Y";
+    Skills* skill_slot1a;
+    Skills* skill_slot1b;
+    Skills* skill_slot2a;
+    Skills* skill_slot2b;
 
     void initialize(sf::RenderWindow& window);
     void updatePlayerStats();
     void updateSkillsText();
 
 public:
-    ShopMenu(sf::RenderWindow& window, Guns& gun, Character& player);
+    ShopMenu(sf::RenderWindow& window, Guns& gun, Character& player, Skills* s1a, Skills* s1b, Skills* s2a, Skills* s2b);
     void run(sf::RenderWindow& window) override;
     void handleEvents(sf::RenderWindow& window) override;
 };

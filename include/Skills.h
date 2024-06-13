@@ -2,9 +2,12 @@
 #define SKILLS_H
 
 #include <SFML/Graphics.hpp>
+#include <string>
 
 class Skills {
 public:
+    std::string name;
+
     float cooldown;
     float initial_cooldown;
     sf::Sprite* player;
@@ -12,8 +15,8 @@ public:
     sf::Vector2f mouse_position;
     float animation_time;
 
-    Skills(float arg_cooldown, sf::Sprite &arg_player, sf::RectangleShape &arg_hit_box);
-    Skills(float arg_cooldown, sf::Sprite &arg_player);
+    Skills(float arg_cooldown, sf::Sprite &arg_player, sf::RectangleShape &arg_hit_box, std::string name);
+    Skills(float arg_cooldown, sf::Sprite &arg_player, std::string name);
     virtual ~Skills() = default;
 
     virtual void use_skill(sf::Vector2f arg_mouse_position) = 0;

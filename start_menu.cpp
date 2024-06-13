@@ -16,8 +16,9 @@ void StartMenu::initialize(sf::RenderWindow& window) {
     }
 
     logo.setTexture(t_logo);
+    logo.setScale(0.25f,0.25f);
     logo.setOrigin(t_logo.getSize().x / 2, 0);
-    logo.setPosition(sf::Vector2f(window.getSize().x / 2, 150));
+    logo.setPosition(sf::Vector2f(window.getSize().x / 2, 100));
 
     start.setFont(font);
     start.setString("START");

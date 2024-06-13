@@ -33,3 +33,12 @@ void Menu::displayErrorWindow(const std::string& errorMsg) {
         errorWindow.display();
     }
 }
+
+void Menu::zaladuj_tlo()
+{
+    if(!tlo_tekstura.loadFromFile(s_tlo))
+        displayErrorWindow("nie udalo sie zaladowac tla!");
+
+    tlo.setTexture(tlo_tekstura);
+    tlo.setPosition(0,0);
+}

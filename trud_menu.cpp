@@ -11,6 +11,7 @@ void DifficultyMenu::initialize(sf::RenderWindow& window) {
         displayErrorWindow("Nie mozna zaladowac czcionki");
         return;
     }
+    zaladuj_tlo();
 
     easy.setFont(font);
     easy.setString("Latwy");
@@ -41,6 +42,7 @@ void DifficultyMenu::run(sf::RenderWindow& window) {
         handleEvents(window);
 
         window.clear(sf::Color::Black);
+        window.draw(tlo);
         window.draw(easy);
         window.draw(medium);
         window.draw(hard);

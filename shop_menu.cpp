@@ -12,6 +12,7 @@ void ShopMenu::initialize(sf::RenderWindow& window) {
         displayErrorWindow("Nie mozna zaladowac czcionki");
         return;
     }
+    zaladuj_tlo();
 
     weaponUpgrade.setFont(font);
     weaponUpgrade.setString("Ulepsz bron (50 monet)");
@@ -65,6 +66,7 @@ void ShopMenu::run(sf::RenderWindow& window) {
         handleEvents(window);
 
         window.clear(sf::Color::Black);
+        window.draw(tlo);
         window.draw(weaponUpgrade);
         window.draw(healthUpgrade);
         window.draw(playerStats);

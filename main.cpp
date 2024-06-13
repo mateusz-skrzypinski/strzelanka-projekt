@@ -45,11 +45,12 @@ bool poziom() {
         // deklaracje
         Character player;
         Guns gun;
+        std::vector<Monster> monsters;
 
         Skills* dash = new Dash(1000,player.player_sprite,player.hit_box);
-        //Skills* teleport = new Chronobreak();
-        //Skills* fireball =
-        //Skills* zap =
+        Skills* teleport = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
+        Skills* fireball = new Fireball(player.player_sprite, &monsters);
+        Skills* zap = new Zap(player.player_sprite, &monsters);
           //    JAKBYS MOGL UZUPELNIC
 
         ShopMenu sklep(window,gun,player,dash,teleport,fireball,zap);//tutaj tez sie wteyd naprawi
@@ -62,7 +63,6 @@ bool poziom() {
         // player.skill_first_slot = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
         // player.name_of_skill = "Teleport"; // bardzo ważne - plamietaj przy tworzeniu sklepu
 
-        std::vector<Monster> monsters;
         for (int i = 0; i < 5; i++) {
             monsters.emplace_back(Monster());
         }

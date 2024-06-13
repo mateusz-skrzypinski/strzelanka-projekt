@@ -15,7 +15,7 @@ Character::Character() {
     player_sprite.setOrigin(102,90);
     hit_box.setSize(sf::Vector2f(80, 75));
     hit_box.setOrigin(40, 40);
-    hit_box.setPosition(385,315);
+    hit_box.setPosition(128,540);
     //hit_box.setFillColor(sf::Color::Red);
 
     hp = 100;
@@ -114,7 +114,7 @@ void Character::draw(sf::RenderWindow& window, float dt, sf::Vector2f mouse_xy) 
             std::cout << "Error: frame_number (" << frame_number << ") out of range for walking_texture" << std::endl;
         }
     }
-    //window.draw(hit_box);
+    //aaaaaaaaaswindow.draw(hit_box);
     window.draw(player_sprite);
     is_walking = false;
     is_shooting = false;

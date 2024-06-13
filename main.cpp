@@ -18,20 +18,30 @@
 #include "include/Bullet.h"
 #include "include/Guns.h"
 #include "include/Electric_fence.h"
+#include <fstream>
+#include <sstream>
 
 sf::RenderWindow window(sf::VideoMode(1920, 1080), "my window", sf::Style::Close);
 
-bool poziom();
+bool poziom(int poziom);
 
 int main() {
-    try {        
-        srand((time(NULL)));
-        window.setFramerateLimit(60);
+    try {
+        int level_number = 1;
+        while (true) {
+            if (level_number >= 3) {
+                std::cout << "wygrales!!!";
+                return 0;
+            }
+            srand((time(NULL)));
+            window.setFramerateLimit(60);
 
-        StartMenu st(window);
-        st.run(window);
+            StartMenu st(window);
+            st.run(window);
 
-        poziom();
+            if(poziom(level_number))
+                level_number++;
+        }
     } catch (const std::exception &e) {
         std::cout << "Exception: " << e.what() << std::endl;
     } catch (...) {
@@ -41,12 +51,16 @@ int main() {
     return 0;
 }
 
-bool poziom() {
+bool poziom(int poziom) {
     try {
         // deklaracje
         Character player;
         Guns gun;
         std::vector<Monster> monsters;
+
+        for (int i = 0; i < 5; i++) {
+            monsters.emplace_back(Monster());
+        }
 
         Skills* dash = new Dash(1000,player.player_sprite,player.hit_box);
         Skills* teleport = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
@@ -56,22 +70,44 @@ bool poziom() {
         ShopMenu sklep(window,gun,player,dash,teleport,fireball,zap);//tutaj tez sie wteyd naprawi
         sklep.run(window);
 
-        player.setPosition(sf::Vector2f(400, 300));
+        player.setPosition(sf::Vector2f(128, 540));
 
-        player.skill_first_slot = dash;
-        player.name_of_skill = "Dash"; // bardzo ważne - pamietaj przy tworzeniu sklepu
+        player.skill_first_slot = teleport;
+        player.name_of_skill = "Teleport"; // bardzo ważne - pamietaj przy tworzeniu sklepu
         // player.skill_first_slot = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
         // player.name_of_skill = "Teleport"; // bardzo ważne - plamietaj przy tworzeniu sklepu
 
-        for (int i = 0; i < 5; i++) {
-            monsters.emplace_back(Monster());
-        }
         std::vector<Electric_fence> walls;
 
-        // tutaj dodaj wczytywanie z plików
+        if (poziom >= 3) {
+            std::cout << "nie można wczytać pliku" << std::endl;
+            return 0;
+        }
+        std::string file_name = "../../level/" + std::to_string(poziom) + ".txt";
+        std::ifstream level_file(file_name);
+        if (!level_file.is_open()) {
+            std::cout << "nie mozna otworzyc pliku" << std::endl;
+            return 0;
+        }
 
-        walls.emplace_back(Electric_fence(sf::FloatRect(300,400,1,0)));
-        walls.emplace_back(Electric_fence(sf::FloatRect(1000,700,0,0)));
+        std::string line;
+        while (std::getline(level_file, line)) {
+            std::stringstream ss(line);
+            std::string number;
+
+            // Czytanie trzech liczb oddzielonych przecinkami
+            std::getline(ss, number, ',');
+            int x = std::stoi(number);
+            std::getline(ss, number, ',');
+            int y = std::stoi(number);
+            std::getline(ss, number, ',');
+            int if_rotate = std::stoi(number);
+            walls.emplace_back(sf::FloatRect(x, y, if_rotate, 0));
+        }
+
+        // Zamknięcie pliku
+        level_file.close();
+
         std::vector<Bullet> bullets;
         sf::Clock clock;
 
@@ -174,9 +210,12 @@ bool poziom() {
             }
 
             // obsluga jesli gracz ma mniej niz 0 hp - pozniej zwraca wartosc false funkcji poziom()
-            if (player.hp <= 0)
+            if (player.hp <= 0) {
                 std::cout << "gracz ma mniej niz 0 hp\n";
-
+                return 0;
+            }
+            if (monsters.size() == 0)
+                return 1;
             // renderowanie
             window.clear();
 

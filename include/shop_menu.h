@@ -20,6 +20,9 @@ private:
     Skills* skill_slot2a;
     Skills* skill_slot2b;
 
+    Skills** skill_first_slot;
+    Skills** skill_second_slot;
+
     void initialize(sf::RenderWindow& window);
     void updatePlayerStats();
     void updateSkillsText();

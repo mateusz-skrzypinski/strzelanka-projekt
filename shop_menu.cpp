@@ -1,7 +1,8 @@
 #include "include/shop_menu.h"
 
 ShopMenu::ShopMenu(sf::RenderWindow& window, Guns& gun, Character& player, Skills* s1a, Skills* s1b, Skills* s2a, Skills* s2b)
-    :playerHealth(player.hp), playerDamage(gun.damage), skill_slot1a(s1a), skill_slot1b(s1b), skill_slot2a(s2a), skill_slot2b(s2b)
+    :playerHealth(player.hp), playerDamage(gun.damage), skill_slot1a(s1a), skill_slot1b(s1b),
+    skill_slot2a(s2a), skill_slot2b(s2b), skill_first_slot(&player.skill_first_slot), skill_second_slot(&player.skill_second_slot)
 {
     initialize(window);
 }
@@ -103,22 +104,24 @@ void ShopMenu::handleEvents(sf::RenderWindow& window) {
                 }
 
                 if (skillSlot1.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                    if (skillSlot1.getString() == "Zmien umiejetnosc: " + skill_slot1a->name) {
+                    if (skillSlot1.getString() == sf::String("Zmien umiejetnosc: ") + skill_slot1a->name) {
                         skillSlot1.setString("Zmien umiejetnosc: " + skill_slot1b->name);
+                        *skill_first_slot = skill_slot1a;
                     } else {
                         skillSlot1.setString("Zmien umiejetnosc: " + skill_slot1a->name);
+                        *skill_first_slot = skill_slot1b;
                     }
-                    updateSkillsText();
                     return;
                 }
 
                 if (skillSlot2.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                    if (skillSlot2.getString() == "Zmien umiejetnosc: " + skill_slot2a->name) {
+                    if (skillSlot2.getString() == sf::String("Zmien umiejetnosc: ") + skill_slot2a->name) {
                         skillSlot2.setString("Zmien umiejetnosc: " + skill_slot2b->name);
+                        *skill_second_slot = skill_slot2a;
                     } else {
                         skillSlot2.setString("Zmien umiejetnosc: " + skill_slot2a->name);
+                        *skill_second_slot = skill_slot2b;
                     }
-                    updateSkillsText();
                     return;
                 }
 

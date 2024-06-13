@@ -111,6 +111,19 @@ bool poziom(int poziom) {
         std::vector<Bullet> bullets;
         sf::Clock clock;
 
+        // Dodanie czcionki i tekstu do wyświetlania ilości życia
+        sf::Font font;
+        if (!font.loadFromFile("../../font/Honk-Regular.ttf")) {
+            std::cout << "Nie można wczytać czcionki!" << std::endl;
+            return -1;
+        }
+
+        sf::Text healthText;
+        healthText.setFont(font);
+        healthText.setCharacterSize(24);
+        healthText.setFillColor(sf::Color::Red);
+        healthText.setPosition(window.getSize().x - 150, 10);
+
         while (window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {
@@ -216,6 +229,10 @@ bool poziom(int poziom) {
             }
             if (monsters.size() == 0)
                 return 1;
+
+            // Aktualizacja tekstu z ilością życia
+            healthText.setString("HP: " + std::to_string(player.hp));
+
             // renderowanie
             window.clear();
 
@@ -243,6 +260,9 @@ bool poziom(int poziom) {
 
             for (auto &wall : walls)
                 wall.draw(window,dt);
+
+            // Rysowanie tekstu z ilością życia
+            window.draw(healthText);
 
             window.display();
         }

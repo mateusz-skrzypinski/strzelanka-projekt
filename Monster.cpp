@@ -33,8 +33,12 @@ Monster::Monster() {
     frame_dimentions.emplace_back(sf::IntRect(32, 96, 32, 32));
     setPosition(sf::Vector2f(640 + std::rand() % 1280, std::rand() % 1080));
     hp = 20*DifficultyMenu::mnoznik_trud;   //hp i predkosc sie zmienia wraz z poziomem trudnosci
-    speed = 100*DifficultyMenu::mnoznik_trud;
+    initial_speed = 100*DifficultyMenu::mnoznik_trud;
     stun = 0;
+    //hit_box.setFillColor(sf::Color::Red);
+    hit_box.setSize(sf::Vector2f(50,50));
+    hit_box.setOrigin(25,25);
+    hit_box.setPosition(this->getPosition());
 }
 
 void Monster::reduce_stun(float dt) {
@@ -45,6 +49,7 @@ void Monster::reduce_stun(float dt) {
 }
 
 void Monster::draw(sf::RenderWindow &window, float dt, sf::Vector2f character_xy) {
+    slow_timer -= dt;
     last_attack += dt;
     if (stun <= 0 && hp > 0) {
         sf::Vector2f monster_xy = this->getPosition();
@@ -55,7 +60,13 @@ void Monster::draw(sf::RenderWindow &window, float dt, sf::Vector2f character_xy
             dir_vector = dir_vector / norm;
         }
 
+        if (slow_timer > 0)
+            speed = initial_speed * slow_factor;
+        else
+            speed = initial_speed;
+
         this->move(dir_vector * speed * dt);
+        hit_box.move(dir_vector * speed * dt);
 
         float alpha = std::atan2(std::abs(dir_vector.y), std::abs(dir_vector.x)) * 180 / 3.14159265;
         last_frame += dt;
@@ -68,7 +79,6 @@ void Monster::draw(sf::RenderWindow &window, float dt, sf::Vector2f character_xy
             frame_number = 0;
         }
 
-        // Set scale before setting texture rect
         this->setScale(scale_factor, scale_factor);
 
         if (dir_vector.x > 0 && dir_vector.y > 0) {
@@ -99,9 +109,11 @@ void Monster::draw(sf::RenderWindow &window, float dt, sf::Vector2f character_xy
             }
         }
         window.draw(*this);
+        //window.draw(hit_box);
     } else if (hp <= 0){
         dying_animate(window, dt);
     }
+    //window.draw(hit_box);
     window.draw(*this);
 }
 

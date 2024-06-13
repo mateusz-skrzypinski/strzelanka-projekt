@@ -29,7 +29,7 @@ Electric_fence::Electric_fence(sf::FloatRect global_bounds) {   // Left - poloze
     hit_box.setOrigin(128,8);
     hit_box.setRotation(fence_sprite.getRotation());
     hit_box.setPosition(fence_sprite.getPosition());
-    hit_box.setFillColor(sf::Color::Green);
+    //hit_box.setFillColor(sf::Color::Green);
 }
 
 void Electric_fence::draw(sf::RenderWindow &window, float dt) {
@@ -39,6 +39,7 @@ void Electric_fence::draw(sf::RenderWindow &window, float dt) {
         frame_number++;
     }
     fence_sprite.setTextureRect(frames[frame_number%12]);
+    //window.draw(hit_box);
     window.draw(fence_sprite);
 }
 

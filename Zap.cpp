@@ -5,7 +5,7 @@
 #include <iostream>
 
 Zap::Zap(sf::Sprite &arg_player, std::vector<Monster> *arg_monsters)
-    : Skills(2.0f, arg_player), monsters(arg_monsters) {
+    : Skills(2.0f, arg_player, "ZAP"), monsters(arg_monsters) {
     radius = 200.0f;
     stun_time = 2.0f;
     damage = 20.0f;

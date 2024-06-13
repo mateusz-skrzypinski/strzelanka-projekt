@@ -17,7 +17,6 @@
 #include <stdexcept>
 #include "include/Bullet.h"
 #include "include/Guns.h"
-#include "include/Electric_fence.h"
 
 sf::RenderWindow window(sf::VideoMode(1920, 1080), "my window", sf::Style::Close);
 
@@ -47,17 +46,18 @@ bool poziom() {
         Character player;
         Guns gun;
 
-        std::vector<Electric_fence> walls;
-        // tutaj dodaj wczytywanie z plików
-        walls.emplace_back(Electric_fence(sf::FloatRect(300,400,1,0)));
-        walls.emplace_back(Electric_fence(sf::FloatRect(1000,700,0,0)));
+        Skills* dash = new Dash(1000,player.player_sprite,player.hit_box);
+        //Skills* teleport = new Chronobreak();
+        //Skills* fireball =
+        //Skills* zap =
+          //    JAKBYS MOGL UZUPELNIC
 
-        ShopMenu sklep(window,gun,player);
+        ShopMenu sklep(window,gun,player,dash,teleport,fireball,zap);//tutaj tez sie wteyd naprawi
         sklep.run(window);
 
         player.setPosition(sf::Vector2f(400, 300));
 
-        player.skill_first_slot = new Dash(1000, player.player_sprite, player.hit_box);
+        player.skill_first_slot = dash;
         player.name_of_skill = "Dash"; // bardzo ważne - pamietaj przy tworzeniu sklepu
         // player.skill_first_slot = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
         // player.name_of_skill = "Teleport"; // bardzo ważne - plamietaj przy tworzeniu sklepu
@@ -90,11 +90,11 @@ bool poziom() {
 
             if ((player.name_of_skill == "Dash" && player.skill_first_slot->animation_time <= 0)
                 || (player.name_of_skill == "Teleport" && player.skill_first_slot->animation_time <= 0)) {
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && player.getPosition().y  > 0) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && player.getPosition().y > 0) {
                     player.top = -1;
                     player.is_walking = true;
                 }
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && player.getPosition().y  < window.getSize().y) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && player.getPosition().y + player.player_sprite.getGlobalBounds().height < window.getSize().y) {
                     player.top = 1;
                     player.is_walking = true;
                 }
@@ -102,7 +102,7 @@ bool poziom() {
                     player.right = -1;
                     player.is_walking = true;
                 }
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && player.getPosition().x  < window.getSize().x) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && player.getPosition().x + player.player_sprite.getGlobalBounds().width < window.getSize().x) {
                     player.right = 1;
                     player.is_walking = true;
                 }
@@ -134,34 +134,12 @@ bool poziom() {
                     player.is_shooting = true;
                 }
             }
-
-            // interakcje ze scianami
-            for (size_t i = 0; i < walls.size(); i++) {
-                if (walls[i].check_collision(player.hit_box.getGlobalBounds())) {
-                    player.slow_factor = walls[i].slow_factor;
-                    player.slow_timer = 2.0f;
-                }
-                for (auto &monster : monsters) {
-                    if (walls[i].check_collision(monster.hit_box.getGlobalBounds())) {
-                        monster.slow_factor = walls[i].slow_factor;
-                        monster.slow_timer = 2.0f;
-                    }
-                }
-            }
-
-            // interakcje z pociskami
             for (size_t i = 0; i < bullets.size(); i++) {
                 bullets[i].move_(dt);
                 if (!bullets[i].is_bullet_in())
                     bullets.erase(bullets.begin() + i);
-                for (auto &wall : walls) {
-                    if (bullets[i].check_collision(wall.hit_box.getGlobalBounds())) {
-                        bullets.erase(bullets.begin() + i);
-                        break;
-                    }
-                }
                 for (auto &monster : monsters) {
-                    if (bullets[i].check_collision(monster.hit_box.getGlobalBounds()) && monster.hp > 0) {
+                    if (bullets[i].check_collision(monster) && monster.hp > 0) {
                         monster.hp -= gun.damage;
                         bullets.erase(bullets.begin() + i);
                         break;  // Wychodzimy z pętli, aby uniknąć problemów z iteratorami
@@ -197,9 +175,6 @@ bool poziom() {
                 player.skill_second_slot->draw(window, dt);
 
             player.draw(window, dt, mouse_xy);
-
-            for (auto &wall : walls)
-                wall.draw(window,dt);
 
             window.display();
         }

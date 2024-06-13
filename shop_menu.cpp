@@ -1,7 +1,7 @@
 #include "include/shop_menu.h"
 
-ShopMenu::ShopMenu(sf::RenderWindow& window, Guns& gun, Character& player)
-    :playerHealth(player.hp), playerDamage(gun.damage)
+ShopMenu::ShopMenu(sf::RenderWindow& window, Guns& gun, Character& player, Skills* s1a, Skills* s1b, Skills* s2a, Skills* s2b)
+    :playerHealth(player.hp), playerDamage(gun.damage), skill_slot1a(s1a), skill_slot1b(s1b), skill_slot2a(s2a), skill_slot2b(s2b)
 {
     initialize(window);
 }
@@ -55,8 +55,8 @@ void ShopMenu::updatePlayerStats() {
 }
 
 void ShopMenu::updateSkillsText() {
-    skillSlot1.setString("Zmien umiejetnosc: " + skill1);
-    skillSlot2.setString("Zmien umiejetnosc: " + skill2);
+    skillSlot1.setString("Zmien umiejetnosc: " + skill_slot1a->name);
+    skillSlot2.setString("Zmien umiejetnosc: " + skill_slot2a->name);
 }
 
 void ShopMenu::run(sf::RenderWindow& window) {
@@ -103,20 +103,20 @@ void ShopMenu::handleEvents(sf::RenderWindow& window) {
                 }
 
                 if (skillSlot1.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                    if (skill1 == "Umiejetnosc X") {
-                        skill1 = "Umiejetnosc Y";
+                    if (skillSlot1.getString() == "Zmien umiejetnosc: " + skill_slot1a->name) {
+                        skillSlot1.setString("Zmien umiejetnosc: " + skill_slot1b->name);
                     } else {
-                        skill1 = "Umiejetnosc X";
+                        skillSlot1.setString("Zmien umiejetnosc: " + skill_slot1a->name);
                     }
                     updateSkillsText();
                     return;
                 }
 
                 if (skillSlot2.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                    if (skill2 == "Umiejetnosc X") {
-                        skill2 = "Umiejetnosc Y";
+                    if (skillSlot2.getString() == "Zmien umiejetnosc: " + skill_slot2a->name) {
+                        skillSlot2.setString("Zmien umiejetnosc: " + skill_slot2b->name);
                     } else {
-                        skill2 = "Umiejetnosc X";
+                        skillSlot2.setString("Zmien umiejetnosc: " + skill_slot2a->name);
                     }
                     updateSkillsText();
                     return;

@@ -5,7 +5,7 @@
 #include <cmath>
 
 Dash::Dash(float arg_maximum_dash_range, sf::Sprite& arg_player, sf::RectangleShape &arg_hit_box)
-    : Skills(2.0f, arg_player, arg_hit_box), maximum_dash_range(arg_maximum_dash_range) {
+    : Skills(2.0f, arg_player, arg_hit_box, "DASH"), maximum_dash_range(arg_maximum_dash_range) {
 }
 
 void Dash::use_skill(sf::Vector2f arg_mouse_position) {

@@ -6,7 +6,7 @@
 #include <iostream>
 
 Fireball::Fireball(sf::Sprite &arg_player, std::vector<Monster> *arg_monsters)
-    : Skills(2, arg_player), monsters(arg_monsters) {
+    : Skills(2, arg_player, "FIREBALL"), monsters(arg_monsters) {
     radius = 400.0f;
     damage = 100.0f;
     using_now = false;

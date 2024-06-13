@@ -1,5 +1,7 @@
 #include "include/Character.h"
+#include "include/Dash.h"
 #include <SFML/Graphics.hpp>
+#include "include/Zap.h"
 #include <iostream>
 #include "include/trud_menu.h"
 #include <cmath>
@@ -11,14 +13,14 @@ Character::Character() {
     skill_second_slot = nullptr;
     load_texture();
     player_sprite.setOrigin(102,90);
-    hit_box.setSize(sf::Vector2f(80, 75));
-    hit_box.setOrigin(40, 40);
-    hit_box.setPosition(385,315);
-    hit_box.setFillColor(sf::Color::Red);
+    hit_box.setPosition(player_sprite.getPosition());
+    hit_box.setSize(sf::Vector2f(190, 180));
+    hit_box.setOrigin(95, 90);
+    hit_box.setPosition(300,400);
     hp = 100;
     top = 0;
     right = 0;
-    initial_speed = 400.0f/DifficultyMenu::mnoznik_trud; //gracz jest wolniejszy jesli ma wyzszy poziom trudnosci
+    speed = 400.0f/DifficultyMenu::mnoznik_trud; //gracz jest wolniejszy jesli ma wyzszy poziom trudnosci
 }
 
 
@@ -30,8 +32,6 @@ Character::~Character() {
 }
 
 void Character::move(sf::Vector2f xy_distance) {
-    if (slow_timer > 0)
-        xy_distance *= slow_factor;
     player_sprite.move(xy_distance);
     hit_box.move(xy_distance);
     if (top == 0 && right == 1)
@@ -63,9 +63,8 @@ void Character::setPosition(sf::Vector2f position) {
 }
 
 void Character::draw(sf::RenderWindow& window, float dt, sf::Vector2f mouse_xy) {
-    slow_timer -= dt;
     if (!is_walking && !is_shooting) {
-        speed = initial_speed;
+        speed = 400.0f/DifficultyMenu::mnoznik_trud; //gracz jest wolniejszy jesli ma wyzszy poziom trudnosci
         player_sprite.setTexture(peace_texture);
         window.draw(player_sprite);
         return;
@@ -81,7 +80,7 @@ void Character::draw(sf::RenderWindow& window, float dt, sf::Vector2f mouse_xy) 
     }
 
     if (is_shooting) {
-        speed = initial_speed/2;
+        speed = 200.0f/DifficultyMenu::mnoznik_trud; //gracz jest wolniejszy jesli ma wyzszy poziom trudnosci
         if (frame_number < static_cast<int>(shooting_texture.size())) {
             player_sprite.setTexture(shooting_texture[frame_number]);
         } else {
@@ -103,7 +102,7 @@ void Character::draw(sf::RenderWindow& window, float dt, sf::Vector2f mouse_xy) 
         }
         player_sprite.setRotation(alpha);
     } else {
-        speed = initial_speed;
+        speed = 400.0f/DifficultyMenu::mnoznik_trud; //gracz jest wolniejszy jesli ma wyzszy poziom trudnosci
         if (frame_number < static_cast<int>(walking_texture.size())) {
             player_sprite.setTexture(walking_texture[frame_number]);
         } else {

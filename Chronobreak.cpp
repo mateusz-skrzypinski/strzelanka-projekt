@@ -2,7 +2,7 @@
 #include <iostream>
 
 Chronobreak::Chronobreak(sf::Sprite &arg_player, sf::RectangleShape &arg_hit_box, float *arg_player_hp)
-    : Skills(2.0f, arg_player, arg_hit_box), player_hp(arg_player_hp) {
+    : Skills(2.0f, arg_player, arg_hit_box, "TELEPORT"), player_hp(arg_player_hp) {
     teleport_texture.loadFromFile("../../img/Teleport.png");
     teleport_sprite.setTexture(teleport_texture);
     teleport_sprite.setOrigin(teleport_sprite.getGlobalBounds().width/2, teleport_sprite.getGlobalBounds().height/2);

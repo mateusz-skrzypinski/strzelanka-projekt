@@ -15,11 +15,11 @@ void Skills::use_skill(sf::Vector2f arg_mouse_position) {
     mouse_position = arg_mouse_position;
 }
 
-bool Skills::is_cooldown_off() {
+bool Skills::is_cooldown_off() { // sprawdzenie czy mozna uzyc umiejetnosc
     return cooldown <= 0;
 }
 
-void Skills::activate_cooldown() {
+void Skills::activate_cooldown() { // aktywacja czasu odnowienia
     cooldown = initial_cooldown;
 }
 

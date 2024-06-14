@@ -30,31 +30,29 @@ bool poziom(int poziom);
 
 int main() {
     try {
-
-
-        // Załaduj ikonę
+        // ladowanie ikony
         sf::Image icon;
         if (!icon.loadFromFile("../../img/logo.png")) {
-            return -1; // Błąd przy ładowaniu ikony
+            return -1; // Blad przy ladowaniu ikony
         }
 
-        // Ustaw ikonę
+        // ustawienie ikony
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-        int level_number = 1;
+        int level_number = 1; // poziom 1
         while (window.isOpen()) {
-            if (level_number >= 3) {
+            if (level_number >= 3) { // warunek przejscia calej gry
                 std::cout << "wygrales!!!";
-                return 0;
+                return 0; // wyjscie
             }
-            srand((time(NULL)));
-            window.setFramerateLimit(60);
+            srand((time(NULL))); // zeby monstery sie pojawialy w losowych miejscach
+            window.setFramerateLimit(60); // ustawienie stalego limitu klatek/s
 
             StartMenu st(window);
             st.run(window);
 
-            if(window.isOpen() && poziom(level_number))
-                level_number++;
+            if(window.isOpen() && poziom(level_number)) // uruchamia poziom
+                level_number++; // jesli poziom zostal pokonany, przechodzi na nastepny poziom
 
 
         }
@@ -84,18 +82,13 @@ bool poziom(int poziom) {
         Skills* fireball = new Fireball(player.player_sprite, &monsters);
         Skills* zap = new Zap(player.player_sprite, &monsters);
 
-        ShopMenu sklep(window,gun,player,dash,teleport,fireball,zap);//tutaj tez sie wteyd naprawi
+        ShopMenu sklep(window,gun,player,dash,teleport,fireball,zap);
         sklep.run(window);
 
         player.setPosition(sf::Vector2f(128, 540));
 
-        //player.skill_first_slot = dash;
-        //player.name_of_skill = "Dash"; // bardzo ważne - pamietaj przy tworzeniu sklepu
-        // player.skill_first_slot = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
-        // player.name_of_skill = "Teleport"; // bardzo ważne - plamietaj przy tworzeniu sklepu
-
         std::vector<Electric_fence> walls;
-
+        // wczytywanie rozlozenia scian dla poziomu z pliku .txt
         if (poziom >= 3) {
             std::cout << "nie można wczytać pliku" << std::endl;
             return 0;
@@ -111,8 +104,6 @@ bool poziom(int poziom) {
         while (std::getline(level_file, line)) {
             std::stringstream ss(line);
             std::string number;
-
-            // Czytanie trzech liczb oddzielonych przecinkami
             std::getline(ss, number, ',');
             int x = std::stoi(number);
             std::getline(ss, number, ',');
@@ -122,8 +113,7 @@ bool poziom(int poziom) {
              walls.emplace_back(sf::FloatRect(x, y, if_rotate, 0));
         }
 
-        // Zamknięcie pliku
-        level_file.close();
+        level_file.close(); // Zamknięcie pliku
 
         std::vector<Bullet> bullets;
         sf::Clock clock;
@@ -134,13 +124,14 @@ bool poziom(int poziom) {
             return -1;
         }
 
+        // wyswietlanie aktualnego zdrowia gracza
         sf::Text healthText;
         healthText.setFont(font);
         healthText.setCharacterSize(24);
         healthText.setFillColor(sf::Color::Red);
         healthText.setPosition(window.getSize().x - 150, 10);
 
-        while (window.isOpen()) {
+        while (window.isOpen()) { // glowna petla programu
             sf::Event event;
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
@@ -151,15 +142,17 @@ bool poziom(int poziom) {
 
             // czas i zmienne dla jednej klatki
             sf::Time elapsed = clock.restart();
-            float dt = elapsed.asSeconds();
+            float dt = elapsed.asSeconds(); // czas miedzy klatkami
             sf::Vector2f mouse_xy(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
-            gun.increse_timer(dt);
+            gun.increse_timer(dt); // roznica czasu pomiedzy strzalami
 
             // poruszanie sie
-            player.top = 0;  // Resetujemy wartości na 0 przed sprawdzeniem
+            player.top = 0;  // resetujemy wartości na 0 przed sprawdzeniem
             player.right = 0;
             player.is_walking = false;
 
+            // gracz nie moze sie poruszac w trakcie animacji spella, ktory dziala na jego polozenie
+            // na pierwszy slot nie trafi fireball i zap
             if ((player.skill_first_slot->name == "DASH" && player.skill_first_slot->animation_time <= 0)
                 || (player.skill_first_slot->name == "TELEPORT" && player.skill_first_slot->animation_time <= 0)) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && player.getPosition().y > 0) {
@@ -187,9 +180,9 @@ bool poziom(int poziom) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && player.skill_second_slot != nullptr)
                 player.skill_second_slot->use_skill(mouse_xy);
             if (player.skill_first_slot != nullptr)
-                player.skill_first_slot->change_cooldown(dt);
+                player.skill_first_slot->change_cooldown(dt); // zmiana czasu odnowienia
             if (player.skill_second_slot != nullptr)
-                player.skill_second_slot->change_cooldown(dt);
+                player.skill_second_slot->change_cooldown(dt); // zmiana czasu odnowienia
 
             // strzelanie
             if ((player.name_of_skill == "Teleport" && player.skill_first_slot->animation_time <= 0) || player.name_of_skill != "Teleport") {
@@ -207,6 +200,7 @@ bool poziom(int poziom) {
                 }
             }
 
+            // interakcja scian z graczem i potworami
             for (size_t i = 0; i < walls.size(); i++) {
                 if (walls[i].check_collision(player.hit_box.getGlobalBounds())) {
                     player.slow_factor = walls[i].slow_factor;
@@ -220,6 +214,7 @@ bool poziom(int poziom) {
                 }
             }
 
+            // interakcja pociskow ze scianami i potworami
             for (size_t i = 0; i < bullets.size(); i++) {
                 bullets[i].move_(dt);
                 if (!bullets[i].is_bullet_in())
@@ -257,6 +252,7 @@ bool poziom(int poziom) {
 
             healthText.setString("HP: " + std::to_string(player.hp));
 
+            // renderowanie
             window.clear();
 
             for (auto &bullet : bullets)

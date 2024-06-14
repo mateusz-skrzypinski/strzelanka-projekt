@@ -12,55 +12,56 @@ Chronobreak::Chronobreak(sf::Sprite &arg_player, sf::RectangleShape &arg_hit_box
 }
 
 void Chronobreak::use_skill(sf::Vector2f arg_mouse_position) {
-    if (is_cooldown_off()) {
+    if (is_cooldown_off()) { // sprawdzenie czy umiejetnosc mozna uzyc
         frame_number = 0;
         mouse_position = arg_mouse_position;
-        if (is_teleport_set) {
+        if (is_teleport_set) { // sprawdzenie czy teleport jest juz postawiony, jesli tak to sie do niego cofamy
             frame_number = 0;
-            animation_time = 1.5f;
-            is_teleport_set = false;
-            activate_cooldown();
-        } else {
+            animation_time = 1.5f; // czas animacji teleportacji
+            is_teleport_set = false; // ustawienie wartosci zmiennej, zeby przy nastepnym wywolaniu znow postawic najpierw teleport
+            activate_cooldown(); // aktywowanie czasu odnowienia
+        } else { // teleport nie jest ustawiony, wiec go ustawiamy
             teleport_sprite.setPosition(player->getPosition());
             set_xy();
             second_animation = true;
             is_teleport_set = true;
-            hp_before_teleport = *player_hp;
-            animation_sprite.setTexture(*player->getTexture());
-            activate_cooldown();
+            hp_before_teleport = *player_hp; // zapisanie wartocsi hp przed teleportacja
+            animation_sprite.setTexture(*player->getTexture()); // ustawienie tekstury animacji na aktualna bohatera
+            activate_cooldown(); // aktywowanie czasu odnowienia
         }
     }
 }
 
-void Chronobreak::set_xy() {
+void Chronobreak::set_xy() { // pobranie polozenia xy bohatera
     xy_to_teleport = player->getPosition();
 }
 
-void Chronobreak::teleport_character() {
+void Chronobreak::teleport_character() { // teleportacja bohatera
     player->setPosition(xy_to_teleport);
     hit_box->setPosition(xy_to_teleport);
-    retrive_hp();
+    retrive_hp(); // przywrocenie jego zdrowia
 }
 
 void Chronobreak::draw(sf::RenderWindow& window, float dt) { // animacja
-    animation_time -= dt;
+    animation_time -= dt; // zmiana czasu animacji potrzebna do przeskakiwania pomiedzy klatkami
 
     if (is_teleport_set || animation_time > 0)
-        window.draw(teleport_sprite);
+        window.draw(teleport_sprite); // rysowanie miejsca teleporta gdy ten jest postawiony
     if (animation_time <= 0) {
         frame_number = 0;
-        return;
+        return; // jezeli nie ma animacji teleporta, wyjscie z meotdy
     }
-    if (animation_time > 0) {
+    if (animation_time > 0) { // ANIMACJA
 
         frame_number++;
         if (animation_time > 0.75f) {
             // pierwsza czesc, gdzie znika w miejcu
             if (frame_number == 0)
-                alpha = 1;
+                alpha = 1; // ustawienie skalowania na 1, zeby na pewno nie byl wiekszy
             else
-                alpha = frame_number * -0.0215f + 1.0215;
+                alpha = frame_number * -0.0215f + 1.0215; // obliczanie skalowanie
             player->setScale(alpha, alpha);
+            player->rotate(5);
         }
         else {
             // druga czesc, gdzie pojawia sie na miejscu teleporta
@@ -69,10 +70,11 @@ void Chronobreak::draw(sf::RenderWindow& window, float dt) { // animacja
                 teleport_character();
             }
             else {
+                player->rotate(-5);
                 if (frame_number == 0)
                     alpha = 0.051;
                 else if (frame_number >= 89) {
-                    player->setScale(1,1);
+                    player->setScale(1,1); // ustawienie skalowania na 1, zeby na pewno nie byl wiekszy
                 }
                 else {
                     alpha = frame_number * 0.022f - 0.981;
@@ -83,6 +85,6 @@ void Chronobreak::draw(sf::RenderWindow& window, float dt) { // animacja
     }
 }
 
-void Chronobreak::retrive_hp() {
+void Chronobreak::retrive_hp() { // funkcja przywracjaca hp przed teleportem
     *player_hp = hp_before_teleport;
 }

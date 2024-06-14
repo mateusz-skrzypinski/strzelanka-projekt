@@ -3,7 +3,7 @@
 
 #include "include/menu.h"
 
-class Koniec
+class Koniec : public Menu
 {
 private:
     sf::Texture tekstura;

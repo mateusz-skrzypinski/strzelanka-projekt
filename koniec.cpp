@@ -27,6 +27,20 @@ void Koniec::run()
     sf::Text play_button("", font, 70);
     sf::Text message("", font, 70);
 
+    play_button.setOrigin(play_button.getGlobalBounds().width/2,play_button.getGlobalBounds().height/2);
+    message.setOrigin(message.getGlobalBounds().width/2, message.getGlobalBounds().height/2);
+    play_button.setPosition(window.getSize().x/2, window.getSize().y/2);
+    message.setPosition(window.getSize().x/2, window.getSize().y/2 - 300);
+
+    if (wygrana) {
+        play_button.setString("Przejdz do nastepnego poziomu");
+        message.setString("Wygrana!");
+    }
+    else {
+        play_button.setString("Zagraj ponownie");
+        message.setString("Nie udalo sie, sprobuj ponownie");
+    }
+    
     while(window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -34,24 +48,22 @@ void Koniec::run()
                 window.close();
                 return;
             }
+
+            sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (play_button.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    window.close();
+                    return;
+                }
+            }
+            animacja(play_button, window);
+
+            window.draw(tlo);
+            window.draw(play_button);
+            window.draw(message);
+            window.display();
+            
         }
 
-        if (wygrana) {
-            play_button.setString("Przejdz do nastepnego poziomu");
-            message.setString("Wygrana!");
-        }
-        else {
-            play_button.setString("Zagraj ponownie");
-            message.setString("Nie udalo sie, sprobuj ponownie");
-        }
-        play_button.setOrigin(play_button.getGlobalBounds().width/2,play_button.getGlobalBounds().height/2);
-        message.setOrigin(message.getGlobalBounds().width/2, message.getGlobalBounds().height/2);
-        play_button.setPosition(window.getSize().x/2, window.getSize().y/2);
-        message.setPosition(window.getSize().x/2, window.getSize().y/2 - 300);
-
-        window.draw(tlo);
-        window.draw(play_button);
-        window.draw(message);
-        window.display();
     }
 }

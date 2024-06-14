@@ -20,15 +20,29 @@
 #include "include/Electric_fence.h"
 #include <fstream>
 #include <sstream>
+#include "include/End_gate.h"
+#include "windows.h"
+#include "include/koniec.h"
 
-sf::RenderWindow window(sf::VideoMode(1920, 1080), "my window", sf::Style::Close);
+sf::RenderWindow window(sf::VideoMode(1920, 1080), "3098 PIXTLE", sf::Style::Close);
 
 bool poziom(int poziom);
 
 int main() {
     try {
+
+
+        // Załaduj ikonę
+        sf::Image icon;
+        if (!icon.loadFromFile("../../img/logo.png")) {
+            return -1; // Błąd przy ładowaniu ikony
+        }
+
+        // Ustaw ikonę
+        window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
         int level_number = 1;
-        while (true) {
+        while (window.isOpen()) {
             if (level_number >= 3) {
                 std::cout << "wygrales!!!";
                 return 0;
@@ -39,8 +53,10 @@ int main() {
             StartMenu st(window);
             st.run(window);
 
-            if(poziom(level_number))
+            if(window.isOpen() && poziom(level_number))
                 level_number++;
+
+
         }
     } catch (const std::exception &e) {
         std::cout << "Exception: " << e.what() << std::endl;
@@ -57,8 +73,9 @@ bool poziom(int poziom) {
         Character player;
         Guns gun;
         std::vector<Monster> monsters;
+        End_gate end_gate;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 30*poziom; i++) {
             monsters.emplace_back(Monster());
         }
 
@@ -72,8 +89,8 @@ bool poziom(int poziom) {
 
         player.setPosition(sf::Vector2f(128, 540));
 
-        player.skill_first_slot = teleport;
-        player.name_of_skill = "Teleport"; // bardzo ważne - pamietaj przy tworzeniu sklepu
+        //player.skill_first_slot = dash;
+        //player.name_of_skill = "Dash"; // bardzo ważne - pamietaj przy tworzeniu sklepu
         // player.skill_first_slot = new Chronobreak(player.player_sprite, player.hit_box, &player.hp);
         // player.name_of_skill = "Teleport"; // bardzo ważne - plamietaj przy tworzeniu sklepu
 
@@ -102,7 +119,7 @@ bool poziom(int poziom) {
             int y = std::stoi(number);
             std::getline(ss, number, ',');
             int if_rotate = std::stoi(number);
-            walls.emplace_back(sf::FloatRect(x, y, if_rotate, 0));
+             walls.emplace_back(sf::FloatRect(x, y, if_rotate, 0));
         }
 
         // Zamknięcie pliku
@@ -111,7 +128,6 @@ bool poziom(int poziom) {
         std::vector<Bullet> bullets;
         sf::Clock clock;
 
-        // Dodanie czcionki i tekstu do wyświetlania ilości życia
         sf::Font font;
         if (!font.loadFromFile("../../font/Honk-Regular.ttf")) {
             std::cout << "Nie można wczytać czcionki!" << std::endl;
@@ -129,6 +145,7 @@ bool poziom(int poziom) {
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed) {
                     window.close();
+                    exit(0);
                 }
             }
 
@@ -143,8 +160,8 @@ bool poziom(int poziom) {
             player.right = 0;
             player.is_walking = false;
 
-            if ((player.name_of_skill == "Dash" && player.skill_first_slot->animation_time <= 0)
-                || (player.name_of_skill == "Teleport" && player.skill_first_slot->animation_time <= 0)) {
+            if ((player.skill_first_slot->name == "DASH" && player.skill_first_slot->animation_time <= 0)
+                || (player.skill_first_slot->name == "TELEPORT" && player.skill_first_slot->animation_time <= 0)) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && player.getPosition().y > 0) {
                     player.top = -1;
                     player.is_walking = true;
@@ -225,21 +242,28 @@ bool poziom(int poziom) {
             // obsluga jesli gracz ma mniej niz 0 hp - pozniej zwraca wartosc false funkcji poziom()
             if (player.hp <= 0) {
                 std::cout << "gracz ma mniej niz 0 hp\n";
+                Koniec koniec(false);
+                koniec.run();
                 return 0;
             }
-            if (monsters.size() == 0)
-                return 1;
+            if (end_gate.check_collision(player.player_sprite.getGlobalBounds())) {
+                end_gate.timer += dt;
+                if (end_gate.timer > end_gate.time) {
+                    Koniec koniec(true);
+                    koniec.run();
+                    return 1;
+                }
+            }
 
-            // Aktualizacja tekstu z ilością życia
             healthText.setString("HP: " + std::to_string(player.hp));
 
-            // renderowanie
             window.clear();
 
             for (auto &bullet : bullets)
                 window.draw(bullet);
 
             for (auto it = monsters.begin(); it != monsters.end();) {
+                it->reduce_stun(dt);
                 if (it->hp > 0 && it->check_collision(player.hit_box.getGlobalBounds())) {
                     player.hp -= it->damage;
                 }
@@ -256,12 +280,13 @@ bool poziom(int poziom) {
             if (player.skill_second_slot != nullptr)
                 player.skill_second_slot->draw(window, dt);
 
+            window.draw(end_gate);
+
             player.draw(window, dt, mouse_xy);
 
             for (auto &wall : walls)
                 wall.draw(window,dt);
 
-            // Rysowanie tekstu z ilością życia
             window.draw(healthText);
 
             window.display();

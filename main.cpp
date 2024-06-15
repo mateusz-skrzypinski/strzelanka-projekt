@@ -238,14 +238,14 @@ bool poziom(int poziom) {
             if (player.hp <= 0) {
                 std::cout << "gracz ma mniej niz 0 hp\n";
                 Koniec koniec(false);
-                koniec.run();
+                koniec.run(window);
                 return 0;
             }
             if (end_gate.check_collision(player.player_sprite.getGlobalBounds())) {
                 end_gate.timer += dt;
                 if (end_gate.timer > end_gate.time) {
                     Koniec koniec(true);
-                    koniec.run();
+                    koniec.run(window);
                     return 1;
                 }
             }

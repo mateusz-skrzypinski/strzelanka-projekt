@@ -5,6 +5,8 @@ ShopMenu::ShopMenu(sf::RenderWindow& window, Guns& gun, Character& player, Skill
     skill_slot2a(s2a), skill_slot2b(s2b), skill_first_slot(&player.skill_first_slot), skill_second_slot(&player.skill_second_slot)
 {
     initialize(window);
+    *skill_first_slot = skill_slot1b;
+    *skill_second_slot = skill_slot2b;
 }
 
 void ShopMenu::initialize(sf::RenderWindow& window) {

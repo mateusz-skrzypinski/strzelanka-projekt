@@ -1,10 +1,10 @@
+// koniec.h
 #ifndef KONIEC_H
 #define KONIEC_H
 
 #include "include/menu.h"
 
-class Koniec : public Menu
-{
+class Koniec : public Menu {
 private:
     sf::Texture tekstura;
     std::string wygrano = "../../img/wygrana.png";
@@ -13,7 +13,8 @@ private:
     bool wygrana;
 public:
     Koniec(bool arg_wygrana);
-    void run();
+    void run(sf::RenderWindow& window) override;
+    void handleEvents(sf::RenderWindow& arg_window) override;
 };
 
 #endif // KONIEC_H
